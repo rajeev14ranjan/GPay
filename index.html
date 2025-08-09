@@ -16,7 +16,9 @@
                 <div class="letter-avatar" id="letterAvatar" style="display: none;">R</div>
             </div>
             <div class="recipient-info">
-                <div class="recipient-name" contenteditable="true" id="recipientName">To MAHARANA PRATAP SINGH</div>
+                <div class="recipient-name" id="recipientName">
+                    <span class="recipient-prefix">To</span> <span class="recipient-actual-name" contenteditable="true">MAHARANA PRATAP SINGH</span>
+                </div>
                 <div class="phone-number" contenteditable="true" id="phoneNumber">+91 98765 43210</div>
             </div>
         </div>
@@ -50,7 +52,9 @@
                 </div>
                 <div class="bank-info">
                     <span class="bank-name" contenteditable="true" id="bankName">State Bank of India 1576</span>
-                    <div class="dropdown-arrow">⌄</div>
+                    <div class="dropdown-arrow">
+                        <img src="img/dd.png" alt="dropdown" />
+                    </div>
                 </div>
             </div>
 
@@ -97,16 +101,16 @@
         function toggleAvatar() {
             const userImg = document.getElementById('userAvatar');
             const letterAvatar = document.getElementById('letterAvatar');
-            const recipientName = document.getElementById('recipientName').textContent;
+            const recipientNameElem = document.querySelector('.recipient-actual-name');
+            const recipientName = recipientNameElem ? recipientNameElem.textContent : '';
             
             if (showingImage) {
                 // Switch to letter avatar
                 userImg.style.display = 'none';
                 letterAvatar.style.display = 'flex';
                 
-                // Extract first letter from recipient name (remove "To " prefix if exists)
-                const name = recipientName.replace(/^To\s+/, '');
-                const firstLetter = name.charAt(0).toUpperCase() || 'A';
+                // Extract first letter from recipient name
+                const firstLetter = recipientName.charAt(0).toUpperCase() || 'A';
                 letterAvatar.textContent = firstLetter;
                 
                 showingImage = false;
@@ -274,13 +278,13 @@
 
         // Function to sync recipient name to transaction details
         function syncRecipientName() {
-            const recipientName = document.getElementById('recipientName').textContent;
+            const recipientNameElem = document.querySelector('.recipient-actual-name');
+            const recipientName = recipientNameElem ? recipientNameElem.textContent : '';
             const toRecipient = document.getElementById('toRecipient');
             
-            // Remove "To " prefix if it exists and update toRecipient
-            const name = recipientName.replace(/^To\s+/, '');
+            // Update toRecipient with the name in uppercase
             if (toRecipient) {
-                toRecipient.textContent = name.toUpperCase();
+                toRecipient.textContent = recipientName.toUpperCase();
             }
         }
 
@@ -289,7 +293,7 @@
             updateDateTime();
             
             // Add event listener for recipientName changes
-            const recipientNameElem = document.getElementById('recipientName');
+            const recipientNameElem = document.querySelector('.recipient-actual-name');
             if (recipientNameElem) {
                 // Listen for input events (real-time editing)
                 recipientNameElem.addEventListener('input', syncRecipientName);
