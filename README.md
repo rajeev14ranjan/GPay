@@ -1,3 +1,14 @@
+
+# GPay Demo Project
+
+## Overview
+This project is intended solely for demonstration purposes.
+
+## Purpose
+The goal is to help protect individuals from scammers who request payment receipts as proof of transaction. With this tool, users can generate realistic-looking screenshots to share instead, potentially preventing fraudulent activity and safeguarding themselves from scams.
+
+## Disclaimer
+Users are fully responsible for how they use the generated receipts. The repository owner does not accept any liability for misuse or any consequences arising from the use of this project. By using this project or webpage, you acknowledge and agree to take full responsibility for your actions.
 # Google Pay Receipt Generator
 
 A customizable Google Pay receipt generator that allows you to create realistic-looking payment receipts with editable content.
