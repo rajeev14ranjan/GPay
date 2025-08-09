@@ -198,7 +198,6 @@ span#amount {
     -moz-hyphens: auto;
     -ms-hyphens: auto;
     hyphens: auto;
-    text-transform: capitalize;
 }
 
 /* Pay Again Button */
@@ -609,6 +608,7 @@ span#amount {
     
     .amount {
         font-size: 48px; /* Keep same as larger screens */
+        font-weight: 500;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
     }
