@@ -87,6 +87,7 @@ body {
     -moz-user-drag: none;
     -o-user-drag: none;
     user-drag: none;
+    display: none;
 }
 
 .letter-avatar {
@@ -97,7 +98,10 @@ body {
     -moz-border-radius: 50%;
     background-color: #4a5568;
     color: white;
-    display: none;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
     -webkit-box-align: center;
     -webkit-align-items: center;
     -ms-flex-align: center;
@@ -189,8 +193,8 @@ span#amount {
 
 .payment-status {
     font-size: 16px;
-    color: #474a4e;
-    font-weight: 350;
+    color: #64686f;
+    font-weight: 400;
     background-color: rgba(249, 250, 250, 1);
     padding: 10px 16px;
     border-radius: 10px;
@@ -292,12 +296,6 @@ span#amount {
     cursor: pointer;
     user-select: none;
     transition: all 0.2s ease;
-}
-
-.completed-status:hover {
-    background-color: rgba(0, 0, 0, 0.04);
-    border-radius: 8px;
-    padding: 8px 12px 20px 12px;
 }
 
 .checkmark {
@@ -490,7 +488,6 @@ span#amount {
 
 .recipient-detail,
 .sender-detail {
-    font-weight: 400;
     color: #333;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;

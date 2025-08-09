@@ -13,7 +13,7 @@
         <div class="header">
             <div class="user-avatar" onclick="toggleAvatar()">
                 <img src="img/profile.jpg" alt="User Avatar" id="userAvatar" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'60\' height=\'60\' viewBox=\'0 0 60 60\'%3E%3Ccircle cx=\'30\' cy=\'30\' r=\'30\' fill=\'%23f0f0f0\'/%3E%3Ccircle cx=\'30\' cy=\'22\' r=\'8\' fill=\'%23666\'/%3E%3Cpath d=\'M30 32c-8 0-14 4-14 8v8h28v-8c0-4-6-8-14-8z\' fill=\'%23666\'/%3E%3C/svg%3E'">
-                <div class="letter-avatar" id="letterAvatar" style="display: none;">R</div>
+                <div class="letter-avatar" id="letterAvatar">M</div>
             </div>
             <div class="recipient-info">
                 <div class="recipient-name" id="recipientName">
@@ -95,8 +95,8 @@
     <script>
         // Global variable to track current status (0: Completed, 1: Processing, 2: Failed)
         let statusState = 0;
-        // Global variable to track avatar state (true: showing image, false: showing letter)
-        let showingImage = true;
+        // Global variable to track avatar state (true: showing letter, false: showing image)
+        let showingImage = false;
 
         function toggleAvatar() {
             const userImg = document.getElementById('userAvatar');
@@ -104,22 +104,31 @@
             const recipientNameElem = document.querySelector('.recipient-actual-name');
             const recipientName = recipientNameElem ? recipientNameElem.textContent : '';
             
-            if (showingImage) {
-                // Switch to letter avatar
+            if (!showingImage) {
+                // Switch to image avatar
+                userImg.style.display = 'block';
+                letterAvatar.style.display = 'none';
+                showingImage = true;
+            } else {
+                // Switch back to letter avatar
                 userImg.style.display = 'none';
                 letterAvatar.style.display = 'flex';
                 
                 // Extract first letter from recipient name
-                const firstLetter = recipientName.charAt(0).toUpperCase() || 'A';
-                letterAvatar.textContent = firstLetter;
+                updateLetterAvatar();
                 
                 showingImage = false;
-            } else {
-                // Switch back to image avatar
-                userImg.style.display = 'block';
-                letterAvatar.style.display = 'none';
-                showingImage = true;
             }
+        }
+
+        function updateLetterAvatar() {
+            const letterAvatar = document.getElementById('letterAvatar');
+            const recipientNameElem = document.querySelector('.recipient-actual-name');
+            const recipientName = recipientNameElem ? recipientNameElem.textContent.trim() : '';
+            
+            // Extract first letter from recipient name
+            const firstLetter = recipientName.charAt(0).toUpperCase() || 'M';
+            letterAvatar.textContent = firstLetter;
         }
 
         function generateIds() {
@@ -198,12 +207,15 @@
                 const canvas = await html2canvas(receiptContainer, {
                     useCORS: true,
                     allowTaint: true,
-                    scale: 3, // Higher quality
+                    scale: window.devicePixelRatio * 2, 
                     backgroundColor: '#ffffff',
                     width: receiptContainer.offsetWidth,
                     height: receiptContainer.offsetHeight,
                     scrollX: 0,
-                    scrollY: 0
+                    scrollY: 0,
+                    logging: false,
+                    removeContainer: false,
+                    imageTimeout: 0
                 });
 
                 // Convert canvas to blob
@@ -218,8 +230,6 @@
                             
                             // Write to clipboard
                             await navigator.clipboard.write([clipboardItem]);
-                            
-                            alert('✅ Receipt copied to clipboard!');
                         } else {
                             alert('❌ Error: Clipboard not supported in this browser.\n\nPlease try again or use a modern browser like Chrome, Firefox, or Safari.');
                         }
@@ -286,11 +296,19 @@
             if (toRecipient) {
                 toRecipient.textContent = recipientName.toUpperCase();
             }
+            
+            // Update letter avatar if it's currently showing
+            if (!showingImage) {
+                updateLetterAvatar();
+            }
         }
 
         // Initialize date/time on page load and set up event listeners
         document.addEventListener('DOMContentLoaded', function() {
             updateDateTime();
+            
+            // Initialize letter avatar on page load
+            updateLetterAvatar();
             
             // Add event listener for recipientName changes
             const recipientNameElem = document.querySelector('.recipient-actual-name');
