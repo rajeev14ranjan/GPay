@@ -1,0 +1,410 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background-color: #f5f5f5;
+    padding: 20px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.receipt-container {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    width: 100%;
+    padding: 28px 20px;
+    margin-bottom: 20px;
+    position: relative;
+}
+
+/* Header Section */
+.header {
+    text-align: center;
+    margin-bottom: 28px;
+}
+
+.user-avatar {
+    margin: 0 auto 16px auto;
+    cursor: pointer;
+    position: relative;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.user-avatar img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: #f0f0f0;
+}
+
+.letter-avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: #4a5568;
+    color: white;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    font-weight: 400;
+    font-family: 'Roboto', sans-serif;
+    user-select: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.recipient-info {
+    text-align: center;
+}
+
+.recipient-name {
+    font-size: 20px;
+    font-weight: 400;
+    color: #333;
+    margin-bottom: 4px;
+    line-height: 1.2;
+}
+
+.phone-number {
+    font-size: 14px;
+    color: #666;
+    font-weight: 400;
+    display: none;
+}
+
+/* Amount Section */
+.amount-section {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.currency-amount {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    margin-bottom: 12px;
+}
+
+span#amount {
+    font-family: system-ui;
+}
+
+.currency {
+    font-size: 36px;
+    font-weight: 300;
+    color: #333;
+    margin-right: 4px;
+}
+
+.amount {
+    font-size: 48px;
+    font-weight: 400;
+    color: #333;
+    line-height: 1;
+}
+
+.payment-status {
+    font-size: 16px;
+    color: #474a4e;
+    font-weight: 350;
+    background-color: rgba(249, 250, 250, 1);
+    padding: 10px 16px;
+    border-radius: 10px;
+    display: inline-block;
+}
+
+/* Pay Again Button */
+.pay-again-btn {
+    display: block;
+    width: 105px;
+    height: 36px;
+    margin: 0 auto 30px auto;
+    background-color: rgba(38, 86, 200, 1);
+    color: white;
+    border: none;
+    border-radius: 24px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    text-transform: none;
+}
+
+/* Status Section */
+.status-section {
+    text-align: center;
+    margin-bottom: 28px;
+    padding-bottom: 20px;
+    position: relative;
+}
+
+.completed-status {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #cccdcf;
+    width: 70%;
+    margin-right: auto;
+    margin-left: auto;
+    cursor: pointer;
+    user-select: none;
+    transition: all 0.2s ease;
+}
+
+.completed-status:hover {
+    background-color: rgba(0, 0, 0, 0.04);
+    border-radius: 8px;
+    padding: 8px 12px 20px 12px;
+}
+
+.checkmark {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: #34a853;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: bold;
+    margin-right: 8px;
+    transition: background-color 0.2s ease;
+    flex-shrink: 0;
+}
+
+.completed-status span {
+    font-size: 18px;
+    color: #333;
+    font-weight: 400;
+    text-align: center;
+    line-height: 1.3;
+}
+
+.transaction-date {
+    font-size: 18px;
+    color: #46484a;
+    font-weight: 350;
+    padding-top: 4px;
+}
+
+/* Bank Details Section */
+.bank-details {
+    margin-bottom: 28px;
+    background-color: #ffffff;
+    border: 1px solid #e8eaed;
+    border-radius: 16px;
+    padding: 0;
+    overflow: hidden;
+}
+
+.bank-header {
+    display: flex;
+    align-items: center;
+    padding: 16px 20px;
+    background-color: #ffffff;
+    border: none;
+    border-bottom: 1px solid #e8eaed;
+    border-radius: 16px 16px 0 0;
+    margin-bottom: 0;
+    cursor: pointer;
+}
+
+.bank-icon {
+    margin-right: 12px;
+}
+
+.sbi-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    color: white;
+}
+
+.bank-info {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.bank-name {
+    font-size: 19px;
+    color: #333;
+    font-weight: 400;
+}
+
+.dropdown-arrow {
+    font-size: 20px;
+    color: #666;
+    font-weight: 500;
+    font-family: math;
+}
+
+/* Transaction Details */
+.transaction-details {
+    padding: 20px;
+}
+
+.detail-row {
+    margin-bottom: 14px;
+    line-height: 1.4;
+}
+
+.detail-row:last-child {
+    margin-bottom: 0;
+}
+
+.label {
+    font-size: 16px;
+    color: #333;
+    font-weight: 400;
+    display: block;
+    margin-bottom: 2px;
+}
+
+.value {
+    font-size: 15px;
+    color: #666;
+    font-weight: 400;
+}
+
+.recipient-detail,
+.sender-detail {
+    font-weight: 400;
+    color: #333;
+}
+
+.platform {
+    margin-top: -8px;
+    margin-bottom: 20px;
+}
+
+.platform-info {
+    font-size: 16px;
+    color: #666;
+    font-weight: 400;
+    line-height: 1.3;
+}
+
+/* Footer */
+.footer {
+    text-align: center;
+}
+
+.powered-by {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 12px;
+    font-size: 11px;
+    color: #666;
+    letter-spacing: 0.5px;
+}
+
+.powered-by span {
+    margin-right: 6px;
+}
+
+.upi-logo {
+    font-weight: bold;
+    color: #333;
+    letter-spacing: 1px;
+}
+
+.google-pay-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.google-pay-logo img {
+    height: 24px;
+    width: auto;
+}
+
+/* Fallback text styling if image is not available */
+.google {
+    font-size: 24px;
+    font-weight: 400;
+    color: #4285f4;
+    margin-right: 2px;
+}
+
+.pay {
+    font-size: 20px;
+    font-weight: 400;
+    color: #333;
+}
+
+/* Editable Content Styling */
+[contenteditable="true"] {
+    outline: none;
+    position: relative;
+}
+
+[contenteditable="true"]:focus {
+    background-color: rgba(26, 115, 232, 0.1);
+    border-radius: 4px;
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+    body {
+        padding: 10px;
+    }
+    
+    .receipt-container {
+        padding: 24px 20px;
+    }
+    
+    .currency {
+        font-size: 32px;
+    }
+    
+    .amount {
+        font-size: 42px;
+    }
+    
+    .recipient-name {
+        font-size: 18px;
+    }
+}
+
+/* Animation for smooth transitions */
+.receipt-container * {
+    transition: all 0.3s ease;
+}
+
+/* Custom scrollbar for better appearance */
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 3px;
+}

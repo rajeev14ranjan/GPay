@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https: data: blob: 'unsafe-inline' 'unsafe-eval'; img-src 'self' https: data: blob:;">
+    <title>Google Pay Receipt</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="receipt-container">
+        <!-- Header Section -->
+        <div class="header">
+            <div class="user-avatar" onclick="toggleAvatar()">
+                <img src="img/profile.jpg" alt="User Avatar" id="userAvatar" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'60\' height=\'60\' viewBox=\'0 0 60 60\'%3E%3Ccircle cx=\'30\' cy=\'30\' r=\'30\' fill=\'%23f0f0f0\'/%3E%3Ccircle cx=\'30\' cy=\'22\' r=\'8\' fill=\'%23666\'/%3E%3Cpath d=\'M30 32c-8 0-14 4-14 8v8h28v-8c0-4-6-8-14-8z\' fill=\'%23666\'/%3E%3C/svg%3E'">
+                <div class="letter-avatar" id="letterAvatar" style="display: none;">R</div>
+            </div>
+            <div class="recipient-info">
+                <div class="recipient-name" contenteditable="true" id="recipientName">To MAHARANA PRATAP SINGH</div>
+                <div class="phone-number" contenteditable="true" id="phoneNumber">+91 98765 43210</div>
+            </div>
+        </div>
+
+        <!-- Amount Section -->
+        <div class="amount-section">
+            <div class="currency-amount">
+                <span class="currency">₹</span><span class="amount" contenteditable="true" id="amount">1,00,000</span>
+            </div>
+            <div class="payment-status" contenteditable="true" id="paymentStatus">For war expenses</div>
+        </div>
+
+        <!-- Pay Again Button -->
+        <button class="pay-again-btn" onclick="payAgain()">Pay again</button>
+        
+        
+        <!-- Status Section -->
+        <div class="status-section">
+            <div class="completed-status" id="statusContainer" onclick="toggleStatus()">
+                <div class="checkmark" id="statusIcon">✓</div>
+                <span id="statusText">Completed</span>
+            </div>
+            <div class="transaction-date" contenteditable="true" id="transactionDate">7 Aug 2025, 8:09 am</div>
+        </div>
+
+        <!-- Bank Details Section -->
+        <div class="bank-details">
+            <div class="bank-header">
+                <div class="bank-icon">
+                    <div class="sbi-icon"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MDAiIGhlaWdodD0iNTAwIj48cGF0aCBmaWxsPSIjMTZkIiBkPSJtMjM0LDQ5OWEyNDksMjQ5IDAgMSwxIDMyLDBWMjk1YTQ1LDQ1IDAgMSwwLTMyLDAiLz48L3N2Zz4=" alt="SBI" onerror="this.style.display='none'; this.parentElement.innerHTML='🏛';" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;"></div>
+                </div>
+                <div class="bank-info">
+                    <span class="bank-name" contenteditable="true" id="bankName">State Bank of India 1576</span>
+                    <div class="dropdown-arrow">⌄</div>
+                </div>
+            </div>
+
+            <div class="transaction-details">
+                <div class="detail-row">
+                    <span class="label">UPI transaction ID</span>
+                    <span class="value" contenteditable="true" id="upiTransactionId">410425341973</span>
+                </div>
+
+                <div class="detail-row">
+                    <span class="label">To: <span class="recipient-detail" contenteditable="true" id="toRecipient">MAHARANA PRATAP SINGH</span></span>
+                </div>
+                <div class="detail-row platform">
+                    <span class="platform-info">Google Pay • <span contenteditable="true" id="toEmail">maharanapratap@oksbi</span></span>
+                </div>
+
+                <div class="detail-row">
+                    <span class="label">From: <span class="sender-detail" contenteditable="true" id="fromSender"> Cyber Security Bureau (State Bank of India)</span></span>
+                </div>
+                <div class="detail-row platform">
+                    <span class="platform-info">Google Pay • <span contenteditable="true" id="fromEmail">tgcsb@oksbi</span></span>
+                </div>
+
+                <div class="detail-row">
+                    <span class="label">Google transaction ID</span>
+                    <span class="value" contenteditable="true" id="googleTransactionId">DICBgKidgLGuNl</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <img src="img/footer.png" alt="Powered by UPI Google Pay" style="width: 50px; height: auto; max-height: 100px; object-fit: contain;" onerror="this.style.display='none'; this.parentElement.innerHTML='<div class=\'powered-by\'><span>POWERED BY</span><div class=\'upi-logo\'>UPI</div></div><div class=\'google-pay-logo\'><span class=\'google\'>G</span><span class=\'pay\'>Pay</span></div>';">
+        </div>
+    </div>
+
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <script>
+        // Global variable to track current status (0: Completed, 1: Processing, 2: Failed)
+        let statusState = 0;
+        // Global variable to track avatar state (true: showing image, false: showing letter)
+        let showingImage = true;
+
+        function toggleAvatar() {
+            const userImg = document.getElementById('userAvatar');
+            const letterAvatar = document.getElementById('letterAvatar');
+            const recipientName = document.getElementById('recipientName').textContent;
+            
+            if (showingImage) {
+                // Switch to letter avatar
+                userImg.style.display = 'none';
+                letterAvatar.style.display = 'flex';
+                
+                // Extract first letter from recipient name (remove "To " prefix if exists)
+                const name = recipientName.replace(/^To\s+/, '');
+                const firstLetter = name.charAt(0).toUpperCase() || 'A';
+                letterAvatar.textContent = firstLetter;
+                
+                showingImage = false;
+            } else {
+                // Switch back to image avatar
+                userImg.style.display = 'block';
+                letterAvatar.style.display = 'none';
+                showingImage = true;
+            }
+        }
+
+        function generateIds() {
+            // Generate random UPI transaction ID (12 digits)
+            const randomUpiId = Math.floor(Math.random() * 900000000000) + 100000000000;
+            document.getElementById('upiTransactionId').textContent = randomUpiId.toString();
+
+            // Generate random Google transaction ID (14 characters - mix of uppercase letters and lowercase)
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+            let randomGoogleId = '';
+            for (let i = 0; i < 14; i++) {
+                randomGoogleId += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            document.getElementById('googleTransactionId').textContent = randomGoogleId;
+        }
+
+        function toggleStatus() {
+            const statusContainer = document.getElementById('statusContainer');
+            const statusIcon = document.getElementById('statusIcon');
+            const statusText = document.getElementById('statusText');
+
+            if (statusState === 0) {
+                // Switch to "Payment processing"
+                statusIcon.innerHTML = '!';
+                statusIcon.style.backgroundColor = '#ff9800';
+                statusText.textContent = 'Payment processing';
+                statusState = 1;
+            } else if (statusState === 1) {
+                // Switch to "Payment failed"
+                statusIcon.innerHTML = '✕';
+                statusIcon.style.backgroundColor = '#f44336';
+                statusText.textContent = 'Payment failed';
+                statusState = 2;
+            } else {
+                // Switch back to "Completed"
+                statusIcon.innerHTML = '✓';
+                statusIcon.style.backgroundColor = '#34a853';
+                statusText.textContent = 'Completed';
+                statusState = 0;
+            }
+        }
+
+        async function payAgain() {
+            try {
+                // Get the receipt container element
+                const receiptContainer = document.querySelector('.receipt-container');
+                if (!receiptContainer) {
+                    alert('Receipt container not found');
+                    return;
+                }
+
+                // Show loading message
+                const originalText = event.target.textContent;
+                event.target.textContent = 'Pay again';
+
+                // Generate new IDs
+                generateIds();
+
+                // Update date and time
+                updateDateTime();
+
+                // Format the amount
+                formatAmount();
+
+                // Capture the screenshot using html2canvas
+                const canvas = await html2canvas(receiptContainer, {
+                    useCORS: true,
+                    allowTaint: true,
+                    scale: 3, // Higher quality
+                    backgroundColor: '#ffffff',
+                    width: receiptContainer.offsetWidth,
+                    height: receiptContainer.offsetHeight,
+                    scrollX: 0,
+                    scrollY: 0
+                });
+
+                // Convert canvas to blob
+                canvas.toBlob(async (blob) => {
+                    try {
+                        // Check if Clipboard API is available and supports write
+                        if (navigator.clipboard && navigator.clipboard.write) {
+                            // Create ClipboardItem with the image blob
+                            const clipboardItem = new ClipboardItem({
+                                'image/png': blob
+                            });
+                            
+                            // Write to clipboard
+                            await navigator.clipboard.write([clipboardItem]);
+                            alert('Receipt screenshot copied to clipboard!');
+                        } else {
+                            // Fallback: Create a download link
+                            const url = URL.createObjectURL(blob);
+                            const a = document.createElement('a');
+                            a.href = url;
+                            a.download = 'gpay-receipt.png';
+                            document.body.appendChild(a);
+                            a.click();
+                            document.body.removeChild(a);
+                            URL.revokeObjectURL(url);
+                            alert('Receipt screenshot downloaded! (Clipboard not supported)');
+                        }
+                    } catch (clipboardError) {
+                        console.error('Clipboard error:', clipboardError);
+                        // Fallback: Create a download link
+                        const url = URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = 'gpay-receipt.png';
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                        URL.revokeObjectURL(url);
+                        alert('Could not copy to clipboard. Receipt downloaded instead.');
+                    }
+                }, 'image/png');
+
+            } catch (error) {
+                console.error('Screenshot error:', error);
+                alert('Failed to capture screenshot: ' + error.message);
+            } finally {
+                // Reset button state
+                const button = event.target;
+            }
+        }
+
+        function formatAmount(){
+            const amountElem = document.getElementById('amount');
+            if (amountElem) {
+                let amount = amountElem.textContent.replace(/,/g, '');
+                amount = parseFloat(amount);
+                if (!isNaN(amount)) {
+                    amountElem.textContent = amount.toLocaleString('en-IN', { style: 'decimal', minimumFractionDigits: 0 });
+                } else {
+                    amountElem.textContent = '0';
+                }
+            }
+        }
+
+        function updateDateTime() {
+            // Update transactionDate to current date in "7 Aug 2025, 8:09 am" format
+            function formatDate(date) {
+                const day = date.getDate();
+                const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+                const month = monthNames[date.getMonth()];
+                const year = date.getFullYear();
+                let hours = date.getHours();
+                const minutes = date.getMinutes().toString().padStart(2, '0');
+                const ampm = hours >= 12 ? 'pm' : 'am';
+                hours = hours % 12;
+                hours = hours ? hours : 12; // the hour '0' should be '12'
+                return `${day} ${month} ${year}, ${hours}:${minutes} ${ampm}`;
+            }
+            const now = new Date();
+            const transactionDateElem = document.getElementById('transactionDate');
+            if (transactionDateElem) {
+                transactionDateElem.textContent = formatDate(now);
+            }
+        };
+    </script>
+</body>
+</html>
