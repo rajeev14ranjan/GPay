@@ -40,18 +40,11 @@ A sophisticated web application that generates authentic-looking Google Pay rece
 GPay/
 ├── index.html          # Main interface and UI logic
 ├── styles.css          # Mobile-responsive styling with vendor prefixes
-├── limit.js            # Rate limiting, security, and screenshot protection
 ├── img/
 │   ├── profile.jpg     # Default avatar image
 │   └── footer.png      # UPI/Google Pay branding
 └── README.md           # Project documentation
 ```
-
-### Security Architecture
-- **Client-Side Rate Limiting**: Multi-storage approach using localStorage, sessionStorage, and cookies
-- **Browser Fingerprinting**: Canvas rendering, hardware specs, screen metrics, navigator properties
-- **Screenshot Prevention**: Keyboard shortcut blocking, focus detection, visibility API, print media queries
-- **Anti-Tampering**: Data integrity checks and manipulation detection
 
 ## 🎮 How to Use
 
@@ -69,18 +62,7 @@ GPay/
    - All changes are real-time
 
 3. **📸 Generate Receipt**: 
-   - Click "Capture" button
-   - Receipt automatically copies to clipboard
-   - Shows remaining daily uses
-
-## 🚦 Rate Limiting Details
-
-### Daily Limits
-- **Standard Users**: 5 captures per 24 hours
-- **Authorized Access**: Enhanced privileges for authorized users
-- **Reset Schedule**: 24 hours from first use
-- **Cross-Session**: Persistent across browser restarts
-
+   - All changes are real-time and ready to use
 
 ## ⚙️ Setup & Installation
 
@@ -103,8 +85,7 @@ open http://localhost:8000
 
 ### Requirements
 - Modern web browser with JavaScript enabled
-- Clipboard API support (for copy functionality)
-- Local/HTTPS server (for security features)
+- Local/HTTPS server for development
 
 ## 🎯 Live Demo
 

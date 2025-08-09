@@ -3,12 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https: data: blob: 'unsafe-inline' 'unsafe-eval'; img-src 'self' https: data: blob:;">
-    <!-- Screenshot blocking meta tags -->
-    <meta name="format-detection" content="screenshot=no">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="theme-color" content="#000000">
     <title>Google Pay Receipt</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
@@ -82,7 +76,7 @@
 
                 <div class="detail-row">
                     <span class="label">Google transaction ID</span>
-                    <span class="value" contenteditable="true" id="googleTransactionId">DICBgKidgLGuNl</span>
+                    <span class="value" contenteditable="true" id="googleTransactionId">CICAgKi9PiPkEZ</span>
                 </div>
             </div>
         </div>
@@ -94,7 +88,6 @@
     </div>
 
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
-    <script src="limit.js"></script>
     <script>
         // Global variable to track current status (0: Completed, 1: Processing, 2: Failed)
         let statusState = 0;
@@ -131,9 +124,9 @@
             document.getElementById('upiTransactionId').textContent = randomUpiId.toString();
 
             // Generate random Google transaction ID (14 characters - mix of uppercase letters and lowercase)
-            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
-            let randomGoogleId = '';
-            for (let i = 0; i < 14; i++) {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-';
+            let randomGoogleId = 'CICAg';
+            for (let i = 0; i < 9; i++) {
                 randomGoogleId += chars.charAt(Math.floor(Math.random() * chars.length));
             }
             document.getElementById('googleTransactionId').textContent = randomGoogleId;
@@ -166,41 +159,7 @@
         }
 
         async function payAgain() {
-            // Check rate limit first
-            const limitStatus = isRateLimited();
-            
-            if (limitStatus.limited && !limitStatus.override) {
-                const hoursLeft = limitStatus.resetIn;
-                let message = `🚫 Daily Limit Reached\n\n`;
-                message += `You've used all ${RATE_LIMIT.maxUsesPerDay} attempts for today.\n`;
-                message += `Reset in: ${hoursLeft} hour${hoursLeft !== 1 ? 's' : ''}.\n\n`;
-                message += `This limit prevents misuse and ensures fair access for everyone.`;
-                
-                // Show more stern warning for repeated attempts
-                if (limitStatus.usageData.warningShown) {
-                    message += '\n\n⚠️ Continued attempts to bypass this limit will not work.';
-                }
-                
-                alert(message);
-                return;
-            }
-
             try {
-                // Record the usage only if not overridden (with anti-manipulation check)
-                if (!limitStatus.override) {
-                    const recordResult = recordUse();
-                    if (!recordResult) {
-                        alert('⚠️ Too Fast!\n\nPlease wait a moment between uses.');
-                        return;
-                    }
-                    
-                    // Show warning if approaching limit
-                    const newStatus = isRateLimited();
-                    if (newStatus.remaining <= 2 && newStatus.remaining > 0 && !newStatus.override) {
-                        showUsageWarning(newStatus.remaining);
-                    }
-                }
-                
                 // Get the receipt container element
                 const receiptContainer = document.querySelector('.receipt-container');
                 if (!receiptContainer) {
@@ -208,14 +167,14 @@
                     return;
                 }
 
-                // Show brief loading message but keep button as "Capture" initially
+                // Show brief loading message
                 const button = event.target;
-                const originalText = button.textContent; // This should be "Capture"
+                const originalText = button.textContent;
                 
                 button.textContent = 'Processing...';
                 button.disabled = true;
                 
-                // Brief delay for UI feedback only
+                // Brief delay for UI feedback
                 await new Promise(resolve => setTimeout(resolve, 500));
                 
                 // Generate new IDs first
@@ -227,7 +186,7 @@
                 // Format the amount
                 formatAmount();
 
-                // Change button text to "Pay again" just before screenshot to prevent manual screenshots
+                // Change button text to "Pay again" just before screenshot
                 button.textContent = 'Pay again';
                 button.disabled = false;
 
@@ -256,16 +215,7 @@
                             // Write to clipboard
                             await navigator.clipboard.write([clipboardItem]);
                             
-                            let successMsg = '✅ Receipt copied to clipboard!';
-                            if (limitStatus.override) {
-                                successMsg += '\n\n🔐 Admin override active';
-                            } else {
-                                const newStatus = isRateLimited();
-                                successMsg += newStatus.remaining > 0 
-                                    ? `\n\n${newStatus.remaining} uses remaining today.`
-                                    : '\n\n⚠️ Daily limit reached. Resets in 24 hours.';
-                            }
-                            alert(successMsg);
+                            alert('✅ Receipt copied to clipboard!');
                         } else {
                             alert('❌ Error: Clipboard not supported in this browser.\n\nPlease try again or use a modern browser like Chrome, Firefox, or Safari.');
                         }
@@ -285,9 +235,6 @@
                     button.textContent = 'Capture';
                     button.disabled = false;
                 }
-                
-                // Reset button state and update with remaining uses
-                updatePayAgainButton();
             }
         }
 
@@ -333,7 +280,7 @@
             // Remove "To " prefix if it exists and update toRecipient
             const name = recipientName.replace(/^To\s+/, '');
             if (toRecipient) {
-                toRecipient.textContent = name;
+                toRecipient.textContent = name.toUpperCase();
             }
         }
 

@@ -1,39 +1,3 @@
-/* Screenshot Protection CSS */
-@media screen and (-webkit-min-device-pixel-ratio: 0) {
-    body::before {
-        content: "";
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: transparent;
-        z-index: -1;
-        pointer-events: none;
-    }
-}
-
-/* Hide content during screenshot attempts */
-@media print {
-    .receipt-container {
-        display: none !important;
-    }
-    
-    body::before {
-        content: "Screenshots are not allowed for security reasons.";
-        display: block;
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        font-size: 18px;
-        font-weight: bold;
-        color: #333;
-        text-align: center;
-        z-index: 9999;
-    }
-}
-
 /* Basic reset and styling */
 * {
     margin: 0;
@@ -41,11 +5,6 @@
     box-sizing: border-box;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
-    /* Prevent selection to make screenshots less useful */
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
 }
 
 body {
@@ -85,7 +44,6 @@ body {
     max-width: 400px;
     width: 100%;
     padding: 28px 20px;
-    margin-bottom: 20px;
     position: relative;
 }
 
@@ -169,6 +127,7 @@ body {
     color: #333;
     margin-bottom: 4px;
     line-height: 1.2;
+    text-transform: uppercase;
 }
 
 .phone-number {
@@ -239,6 +198,7 @@ span#amount {
     -moz-hyphens: auto;
     -ms-hyphens: auto;
     hyphens: auto;
+    text-transform: capitalize;
 }
 
 /* Pay Again Button */
@@ -312,7 +272,7 @@ span#amount {
 .status-section {
     text-align: center;
     margin-bottom: 28px;
-    padding-bottom: 20px;
+    padding-bottom: 10px;
     position: relative;
 }
 
@@ -642,27 +602,30 @@ span#amount {
     }
     
     .currency {
-        font-size: 32px;
+        font-size: 36px; /* Keep same as larger screens */
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
     }
     
     .amount {
-        font-size: 42px;
+        font-size: 48px; /* Keep same as larger screens */
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
     }
     
     .recipient-name {
-        font-size: 18px;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
+        font-size: 20px; /* Keep same as larger screens */
+        font-weight: 400;
+        color: #333;
+        margin-bottom: 4px;
+        line-height: 1.2;
+        text-transform: uppercase;
     }
     
     .pay-again-btn {
         width: auto;
         min-width: 120px;
-        font-size: 16px;
+        font-size: 16px; /* Keep same as larger screens */
         padding: 0 20px;
         -webkit-tap-highlight-color: rgba(38, 86, 200, 0.2);
     }
@@ -710,80 +673,4 @@ span#amount {
 * {
     scrollbar-width: thin;
     scrollbar-color: #c1c1c1 #f1f1f1;
-}
-
-/* Screenshot Protection Styles */
-.screenshot-protection {
-    filter: blur(10px) !important;
-    -webkit-filter: blur(10px) !important;
-    transition: filter 0.1s ease;
-    -webkit-transition: -webkit-filter 0.1s ease;
-}
-
-.screenshot-protection::before {
-    content: "⚠️ Content Hidden for Security";
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    -webkit-transform: translate(-50%, -50%);
-    font-size: 18px;
-    font-weight: bold;
-    color: #ff0000;
-    background: rgba(255, 255, 255, 0.9);
-    padding: 20px;
-    border-radius: 10px;
-    -webkit-border-radius: 10px;
-    z-index: 10000;
-    text-align: center;
-    backdrop-filter: blur(5px);
-    -webkit-backdrop-filter: blur(5px);
-}
-
-/* Prevent screenshot via CSS print styles */
-@media print {
-    .receipt-container {
-        display: none !important;
-    }
-    
-    body::before {
-        content: "This content cannot be printed or captured for security reasons." !important;
-        display: block !important;
-        position: fixed !important;
-        top: 50% !important;
-        left: 50% !important;
-        transform: translate(-50%, -50%) !important;
-        font-size: 24px !important;
-        font-weight: bold !important;
-        color: #000 !important;
-        text-align: center !important;
-        z-index: 99999 !important;
-        background: white !important;
-        padding: 50px !important;
-        border: 2px solid #000 !important;
-    }
-}
-
-/* Additional mobile-specific screenshot protection */
-@supports (-webkit-touch-callout: none) {
-    /* iOS Safari specific */
-    body {
-        -webkit-touch-callout: none;
-        -webkit-user-select: none;
-    }
-}
-
-/* Android Chrome specific */
-@media screen and (-webkit-min-device-pixel-ratio: 1) and (max-width: 768px) {
-    body::after {
-        content: "";
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: transparent;
-        z-index: -1;
-        pointer-events: none;
-    }
 }
