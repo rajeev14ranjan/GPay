@@ -1,61 +1,114 @@
 
-# GPay Demo Project
-
-## Overview
-This project is intended solely for demonstration purposes.
-
-## Purpose
-The goal is to help protect individuals from scammers who request payment receipts as proof of transaction. With this tool, users can generate realistic-looking screenshots to share instead, potentially preventing fraudulent activity and safeguarding themselves from scams.
-
-## Disclaimer
-Users are fully responsible for how they use the generated receipts. The repository owner does not accept any liability for misuse or any consequences arising from the use of this project. By using this project or webpage, you acknowledge and agree to take full responsibility for your actions.
 # Google Pay Receipt Generator
 
-A customizable Google Pay receipt generator that allows you to create realistic-looking payment receipts with editable content.
+A sophisticated web application that generates authentic-looking Google Pay receipts with advanced security features and rate limiting.
 
-## Features
+## ⚠️ IMPORTANT DISCLAIMER
 
-- **Editable Content**: Click on any text field to edit recipient name, amount, payment description, transaction IDs, and more
-- **Status Toggle**: Click on the status section to toggle between "Completed" and "Payment processing" states
-- **Screenshot Functionality**: Generate high-quality screenshots that can be copied to clipboard or downloaded
-- **Responsive Design**: Works on both desktop and mobile devices
-- **Realistic Styling**: Matches Google Pay's actual receipt design
+**READ BEFORE USE - BY USING THIS PROJECT YOU AGREE TO THE FOLLOWING:**
 
-## To run this project
+1. **Educational Purpose Only**: This project is created solely for educational and demonstration purposes to showcase web development techniques, security implementations, and rate limiting systems.
 
-```bash
-python3 -m http.server 8000
+2. **Anti-Scam Protection**: The intended use is to help potential victims of scammers who fraudulently request payment receipts. Users can share these generated images instead of real receipts to protect themselves from fraud.
+
+3. **Zero Liability**: The repository owner, contributors, and hosting platforms assume NO responsibility, liability, or accountability for ANY misuse, consequences, damages, or legal issues arising from the use of this tool.
+
+4. **User Responsibility**: By accessing, downloading, or using this project, you explicitly agree that you are solely and entirely responsible for your actions and any consequences thereof.
+
+5. **No Endorsement**: This project does not endorse or encourage any illegal, fraudulent, or unethical activities.
+
+6. **Legal Compliance**: Users must ensure their use complies with all applicable local, state, federal, and international laws.
+
+**IF YOU DO NOT AGREE WITH THESE TERMS, DO NOT USE THIS PROJECT.**
+
+---
+
+## 🚀 Features
+
+### Core Functionality
+- **📝 Fully Editable Interface**: Click any field to customize recipient name, amount, payment details, transaction IDs
+- **🔄 Dynamic Status Toggle**: Switch between "Completed", "Payment Processing", and "Payment Failed" states
+- **📱 Avatar Toggle**: Switch between profile image and letter avatar
+- **📅 Auto Date/Time**: Automatically updates to current timestamp
+- **🎨 Authentic Design**: Pixel-perfect replica of Google Pay interface
+
+
+## 🔧 Technical Implementation
+
+### File Structure
+```
+GPay/
+├── index.html          # Main interface and UI logic
+├── styles.css          # Mobile-responsive styling with vendor prefixes
+├── limit.js            # Rate limiting, security, and screenshot protection
+├── img/
+│   ├── profile.jpg     # Default avatar image
+│   └── footer.png      # UPI/Google Pay branding
+└── README.md           # Project documentation
 ```
 
-Then open your browser and navigate to `http://localhost:8000`
+### Security Architecture
+- **Client-Side Rate Limiting**: Multi-storage approach using localStorage, sessionStorage, and cookies
+- **Browser Fingerprinting**: Canvas rendering, hardware specs, screen metrics, navigator properties
+- **Screenshot Prevention**: Keyboard shortcut blocking, focus detection, visibility API, print media queries
+- **Anti-Tampering**: Data integrity checks and manipulation detection
 
-## How to Use
+## 🎮 How to Use
 
-1. **Edit Details**: Click on any editable field (highlighted when focused) to customize:
+### Basic Usage
+1. **📝 Edit Fields**: Click any highlighted text to customize:
    - Recipient name and phone number
-   - Payment amount and description
-   - Transaction date
-   - Bank details and transaction IDs
-   - Sender information
+   - Payment amount (auto-formatted with commas)
+   - Payment description and status
+   - Transaction date and IDs
+   - Bank and sender details
 
-2. **Toggle Status**: Click on the status section (green checkmark area) to switch between:
-   - ✓ Completed (green)
-   - ! Payment processing (orange)
+2. **🎨 Customize Appearance**: 
+   - Click avatar to toggle between image/letter
+   - Click status to cycle through states
+   - All changes are real-time
 
-3. **Generate Screenshot**: Click the "Pay again" button to:
-   - Copy the receipt image to your clipboard (if supported)
-   - Download as PNG file (fallback option)
-   - Button can be clicked multiple times
+3. **📸 Generate Receipt**: 
+   - Click "Capture" button
+   - Receipt automatically copies to clipboard
+   - Shows remaining daily uses
 
-## Technical Details
+## 🚦 Rate Limiting Details
 
-- Pure HTML, CSS, and JavaScript
-- Uses html2canvas library for screenshot generation
-- Responsive design with mobile support
-- No backend required - runs entirely in the browser
+### Daily Limits
+- **Standard Users**: 5 captures per 24 hours
+- **Authorized Access**: Enhanced privileges for authorized users
+- **Reset Schedule**: 24 hours from first use
+- **Cross-Session**: Persistent across browser restarts
 
-## Browser Compatibility
 
-- Modern browsers with Clipboard API support for copy-to-clipboard functionality
-- Falls back to download if clipboard is not supported
-- Mobile-responsive design
+## ⚙️ Setup & Installation
+
+### Local Development
+```bash
+# Clone repository
+git clone https://github.com/rajeev14ranjan/GPay.git
+cd GPay
+
+# Start local server
+python3 -m http.server 8000
+# OR
+npx http-server .
+# OR
+php -S localhost:8000
+
+# Open browser
+open http://localhost:8000
+```
+
+### Requirements
+- Modern web browser with JavaScript enabled
+- Clipboard API support (for copy functionality)
+- Local/HTTPS server (for security features)
+
+## 🎯 Live Demo
+
+**Try it now:** [https://rajeev14ranjan.github.io/GPay/](https://rajeev14ranjan.github.io/GPay/)
+
+
+**Remember**: This tool is for educational and protective purposes only. Always use technology ethically and responsibly.

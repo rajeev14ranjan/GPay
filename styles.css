@@ -1,23 +1,87 @@
+/* Screenshot Protection CSS */
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+    body::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: transparent;
+        z-index: -1;
+        pointer-events: none;
+    }
+}
+
+/* Hide content during screenshot attempts */
+@media print {
+    .receipt-container {
+        display: none !important;
+    }
+    
+    body::before {
+        content: "Screenshots are not allowed for security reasons.";
+        display: block;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 18px;
+        font-weight: bold;
+        color: #333;
+        text-align: center;
+        z-index: 9999;
+    }
+}
+
+/* Basic reset and styling */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    /* Prevent selection to make screenshots less useful */
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 body {
-    font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
     background-color: #f5f5f5;
     padding: 20px;
     min-height: 100vh;
+    min-height: -webkit-fill-available; /* iOS Safari */
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
     display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
     flex-direction: column;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
     align-items: center;
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 .receipt-container {
     background: white;
     border-radius: 12px;
+    -webkit-border-radius: 12px;
+    -moz-border-radius: 12px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    -webkit-box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    -moz-box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     max-width: 400px;
     width: 100%;
     padding: 28px 20px;
@@ -37,30 +101,58 @@ body {
     position: relative;
     width: 60px;
     height: 60px;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
     display: flex;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
     align-items: center;
+    -webkit-box-pack: center;
+    -webkit-justify-content: center;
+    -ms-flex-pack: center;
     justify-content: center;
+    -webkit-tap-highlight-color: transparent;
 }
 
 .user-avatar img {
     width: 60px;
     height: 60px;
     border-radius: 50%;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
     background-color: #f0f0f0;
+    -webkit-user-drag: none;
+    -khtml-user-drag: none;
+    -moz-user-drag: none;
+    -o-user-drag: none;
+    user-drag: none;
 }
 
 .letter-avatar {
     width: 60px;
     height: 60px;
     border-radius: 50%;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
     background-color: #4a5568;
     color: white;
     display: none;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
     align-items: center;
+    -webkit-box-pack: center;
+    -webkit-justify-content: center;
+    -ms-flex-pack: center;
     justify-content: center;
     font-size: 24px;
     font-weight: 400;
-    font-family: 'Roboto', sans-serif;
+    font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
     user-select: none;
     position: absolute;
     top: 0;
@@ -93,14 +185,23 @@ body {
 }
 
 .currency-amount {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
     display: flex;
+    -webkit-box-align: baseline;
+    -webkit-align-items: baseline;
+    -ms-flex-align: baseline;
     align-items: baseline;
+    -webkit-box-pack: center;
+    -webkit-justify-content: center;
+    -ms-flex-pack: center;
     justify-content: center;
     margin-bottom: 12px;
 }
 
 span#amount {
-    font-family: system-ui;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, Helvetica, Arial, sans-serif;
 }
 
 .currency {
@@ -108,6 +209,9 @@ span#amount {
     font-weight: 300;
     color: #333;
     margin-right: 4px;
+    -webkit-font-feature-settings: 'tnum';
+    -moz-font-feature-settings: 'tnum';
+    font-feature-settings: 'tnum';
 }
 
 .amount {
@@ -115,6 +219,9 @@ span#amount {
     font-weight: 400;
     color: #333;
     line-height: 1;
+    -webkit-font-feature-settings: 'tnum';
+    -moz-font-feature-settings: 'tnum';
+    font-feature-settings: 'tnum';
 }
 
 .payment-status {
@@ -124,23 +231,81 @@ span#amount {
     background-color: rgba(249, 250, 250, 1);
     padding: 10px 16px;
     border-radius: 10px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
     display: inline-block;
+    word-wrap: break-word;
+    -webkit-hyphens: auto;
+    -moz-hyphens: auto;
+    -ms-hyphens: auto;
+    hyphens: auto;
 }
 
 /* Pay Again Button */
 .pay-again-btn {
     display: block;
-    width: 105px;
+    width: auto;
+    min-width: 105px;
     height: 36px;
     margin: 0 auto 30px auto;
     background-color: rgba(38, 86, 200, 1);
     color: white;
     border: none;
     border-radius: 24px;
+    -webkit-border-radius: 24px;
+    -moz-border-radius: 24px;
     font-size: 16px;
     font-weight: 500;
     cursor: pointer;
     text-transform: none;
+    -webkit-transition: all 0.3s ease;
+    -moz-transition: all 0.3s ease;
+    -ms-transition: all 0.3s ease;
+    -o-transition: all 0.3s ease;
+    transition: all 0.3s ease;
+    padding: 0 16px;
+    white-space: nowrap;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.pay-again-btn:hover:not(:disabled) {
+    background-color: rgba(33, 74, 173, 1);
+    -webkit-transform: translateY(-1px);
+    -moz-transform: translateY(-1px);
+    -ms-transform: translateY(-1px);
+    -o-transform: translateY(-1px);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(38, 86, 200, 0.3);
+    -webkit-box-shadow: 0 2px 8px rgba(38, 86, 200, 0.3);
+    -moz-box-shadow: 0 2px 8px rgba(38, 86, 200, 0.3);
+}
+
+.pay-again-btn:active:not(:disabled) {
+    -webkit-transform: translateY(0);
+    -moz-transform: translateY(0);
+    -ms-transform: translateY(0);
+    -o-transform: translateY(0);
+    transform: translateY(0);
+}
+
+.pay-again-btn:disabled {
+    background-color: #999 !important;
+    cursor: not-allowed !important;
+    opacity: 0.7;
+    -webkit-transform: none;
+    -moz-transform: none;
+    -ms-transform: none;
+    -o-transform: none;
+    transform: none;
+    box-shadow: none;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
 }
 
 /* Status Section */
@@ -209,48 +374,93 @@ span#amount {
     background-color: #ffffff;
     border: 1px solid #e8eaed;
     border-radius: 16px;
+    -webkit-border-radius: 16px;
+    -moz-border-radius: 16px;
     padding: 0;
     overflow: hidden;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
 }
 
 .bank-header {
     display: flex;
+    -webkit-flex-direction: row;
+    -moz-flex-direction: row;
+    -ms-flex-direction: row;
+    flex-direction: row;
     align-items: center;
+    -webkit-align-items: center;
+    -ms-align-items: center;
     padding: 16px 20px;
     background-color: #ffffff;
     border: none;
     border-bottom: 1px solid #e8eaed;
     border-radius: 16px 16px 0 0;
+    -webkit-border-radius: 16px 16px 0 0;
+    -moz-border-radius: 16px 16px 0 0;
     margin-bottom: 0;
     cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
 }
 
 .bank-icon {
     margin-right: 12px;
+    flex-shrink: 0;
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
 }
 
 .sbi-icon {
     width: 32px;
     height: 32px;
     border-radius: 50%;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
     display: flex;
+    -webkit-flex-direction: row;
+    -moz-flex-direction: row;
+    -ms-flex-direction: row;
+    flex-direction: row;
     align-items: center;
+    -webkit-align-items: center;
+    -ms-align-items: center;
     justify-content: center;
+    -webkit-justify-content: center;
+    -ms-justify-content: center;
     font-size: 16px;
     color: white;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 .bank-info {
     flex: 1;
+    -webkit-flex: 1;
+    -ms-flex: 1;
     display: flex;
+    -webkit-flex-direction: row;
+    -moz-flex-direction: row;
+    -ms-flex-direction: row;
+    flex-direction: row;
     align-items: center;
+    -webkit-align-items: center;
+    -ms-align-items: center;
     justify-content: space-between;
+    -webkit-justify-content: space-between;
+    -ms-justify-content: space-between;
 }
 
 .bank-name {
     font-size: 19px;
     color: #333;
     font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    word-break: break-word;
 }
 
 .dropdown-arrow {
@@ -258,16 +468,31 @@ span#amount {
     color: #666;
     font-weight: 500;
     font-family: math;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    flex-shrink: 0;
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
 }
 
 /* Transaction Details */
 .transaction-details {
     padding: 20px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    -webkit-overflow-scrolling: touch;
 }
 
 .detail-row {
     margin-bottom: 14px;
     line-height: 1.4;
+    display: block;
+    word-wrap: break-word;
+    -webkit-hyphens: auto;
+    -moz-hyphens: auto;
+    -ms-hyphens: auto;
+    hyphens: auto;
 }
 
 .detail-row:last-child {
@@ -280,18 +505,29 @@ span#amount {
     font-weight: 400;
     display: block;
     margin-bottom: 2px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 .value {
     font-size: 15px;
     color: #666;
     font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    word-break: break-word;
 }
 
 .recipient-detail,
 .sender-detail {
     font-weight: 400;
     color: #333;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 .platform {
@@ -304,21 +540,44 @@ span#amount {
     color: #666;
     font-weight: 400;
     line-height: 1.3;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-align: center;
 }
 
 /* Footer */
 .footer {
     text-align: center;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    padding: 0 20px;
 }
 
 .powered-by {
     display: flex;
+    -webkit-flex-direction: row;
+    -moz-flex-direction: row;
+    -ms-flex-direction: row;
+    flex-direction: row;
     align-items: center;
+    -webkit-align-items: center;
+    -ms-align-items: center;
     justify-content: center;
+    -webkit-justify-content: center;
+    -ms-justify-content: center;
     margin-bottom: 12px;
     font-size: 11px;
     color: #666;
     letter-spacing: 0.5px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
 }
 
 .powered-by span {
@@ -371,27 +630,58 @@ span#amount {
 @media (max-width: 480px) {
     body {
         padding: 10px;
+        -webkit-text-size-adjust: 100%;
+        -ms-text-size-adjust: 100%;
+        text-size-adjust: 100%;
     }
     
     .receipt-container {
         padding: 24px 20px;
+        min-height: auto;
+        -webkit-overflow-scrolling: touch;
     }
     
     .currency {
         font-size: 32px;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
     }
     
     .amount {
         font-size: 42px;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
     }
     
     .recipient-name {
         font-size: 18px;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+    
+    .pay-again-btn {
+        width: auto;
+        min-width: 120px;
+        font-size: 16px;
+        padding: 0 20px;
+        -webkit-tap-highlight-color: rgba(38, 86, 200, 0.2);
+    }
+    
+    .bank-header {
+        padding: 12px 16px;
+    }
+    
+    .transaction-details {
+        padding: 16px;
     }
 }
 
 /* Animation for smooth transitions */
 .receipt-container * {
+    -webkit-transition: all 0.3s ease;
+    -moz-transition: all 0.3s ease;
+    -ms-transition: all 0.3s ease;
+    -o-transition: all 0.3s ease;
     transition: all 0.3s ease;
 }
 
@@ -402,9 +692,98 @@ span#amount {
 
 ::-webkit-scrollbar-track {
     background: #f1f1f1;
+    border-radius: 3px;
+    -webkit-border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb {
     background: #c1c1c1;
     border-radius: 3px;
+    -webkit-border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
+
+/* Firefox scrollbar styling */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: #c1c1c1 #f1f1f1;
+}
+
+/* Screenshot Protection Styles */
+.screenshot-protection {
+    filter: blur(10px) !important;
+    -webkit-filter: blur(10px) !important;
+    transition: filter 0.1s ease;
+    -webkit-transition: -webkit-filter 0.1s ease;
+}
+
+.screenshot-protection::before {
+    content: "⚠️ Content Hidden for Security";
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    -webkit-transform: translate(-50%, -50%);
+    font-size: 18px;
+    font-weight: bold;
+    color: #ff0000;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 20px;
+    border-radius: 10px;
+    -webkit-border-radius: 10px;
+    z-index: 10000;
+    text-align: center;
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+}
+
+/* Prevent screenshot via CSS print styles */
+@media print {
+    .receipt-container {
+        display: none !important;
+    }
+    
+    body::before {
+        content: "This content cannot be printed or captured for security reasons." !important;
+        display: block !important;
+        position: fixed !important;
+        top: 50% !important;
+        left: 50% !important;
+        transform: translate(-50%, -50%) !important;
+        font-size: 24px !important;
+        font-weight: bold !important;
+        color: #000 !important;
+        text-align: center !important;
+        z-index: 99999 !important;
+        background: white !important;
+        padding: 50px !important;
+        border: 2px solid #000 !important;
+    }
+}
+
+/* Additional mobile-specific screenshot protection */
+@supports (-webkit-touch-callout: none) {
+    /* iOS Safari specific */
+    body {
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+    }
+}
+
+/* Android Chrome specific */
+@media screen and (-webkit-min-device-pixel-ratio: 1) and (max-width: 768px) {
+    body::after {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: transparent;
+        z-index: -1;
+        pointer-events: none;
+    }
 }

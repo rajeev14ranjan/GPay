@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Content-Security-Policy" content="default-src 'self' https: data: blob: 'unsafe-inline' 'unsafe-eval'; img-src 'self' https: data: blob:;">
+    <!-- Screenshot blocking meta tags -->
+    <meta name="format-detection" content="screenshot=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#000000">
     <title>Google Pay Receipt</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
@@ -31,7 +36,7 @@
         </div>
 
         <!-- Pay Again Button -->
-        <button class="pay-again-btn" onclick="payAgain()">Pay again</button>
+        <button class="pay-again-btn" onclick="payAgain()">Capture</button>
         
         
         <!-- Status Section -->
@@ -89,6 +94,7 @@
     </div>
 
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <script src="limit.js"></script>
     <script>
         // Global variable to track current status (0: Completed, 1: Processing, 2: Failed)
         let statusState = 0;
@@ -160,7 +166,41 @@
         }
 
         async function payAgain() {
+            // Check rate limit first
+            const limitStatus = isRateLimited();
+            
+            if (limitStatus.limited && !limitStatus.override) {
+                const hoursLeft = limitStatus.resetIn;
+                let message = `🚫 Daily Limit Reached\n\n`;
+                message += `You've used all ${RATE_LIMIT.maxUsesPerDay} attempts for today.\n`;
+                message += `Reset in: ${hoursLeft} hour${hoursLeft !== 1 ? 's' : ''}.\n\n`;
+                message += `This limit prevents misuse and ensures fair access for everyone.`;
+                
+                // Show more stern warning for repeated attempts
+                if (limitStatus.usageData.warningShown) {
+                    message += '\n\n⚠️ Continued attempts to bypass this limit will not work.';
+                }
+                
+                alert(message);
+                return;
+            }
+
             try {
+                // Record the usage only if not overridden (with anti-manipulation check)
+                if (!limitStatus.override) {
+                    const recordResult = recordUse();
+                    if (!recordResult) {
+                        alert('⚠️ Too Fast!\n\nPlease wait a moment between uses.');
+                        return;
+                    }
+                    
+                    // Show warning if approaching limit
+                    const newStatus = isRateLimited();
+                    if (newStatus.remaining <= 2 && newStatus.remaining > 0 && !newStatus.override) {
+                        showUsageWarning(newStatus.remaining);
+                    }
+                }
+                
                 // Get the receipt container element
                 const receiptContainer = document.querySelector('.receipt-container');
                 if (!receiptContainer) {
@@ -168,11 +208,17 @@
                     return;
                 }
 
-                // Show loading message
-                const originalText = event.target.textContent;
-                event.target.textContent = 'Pay again';
-
-                // Generate new IDs
+                // Show brief loading message but keep button as "Capture" initially
+                const button = event.target;
+                const originalText = button.textContent; // This should be "Capture"
+                
+                button.textContent = 'Processing...';
+                button.disabled = true;
+                
+                // Brief delay for UI feedback only
+                await new Promise(resolve => setTimeout(resolve, 500));
+                
+                // Generate new IDs first
                 generateIds();
 
                 // Update date and time
@@ -180,6 +226,10 @@
 
                 // Format the amount
                 formatAmount();
+
+                // Change button text to "Pay again" just before screenshot to prevent manual screenshots
+                button.textContent = 'Pay again';
+                button.disabled = false;
 
                 // Capture the screenshot using html2canvas
                 const canvas = await html2canvas(receiptContainer, {
@@ -205,31 +255,23 @@
                             
                             // Write to clipboard
                             await navigator.clipboard.write([clipboardItem]);
-                            alert('Receipt screenshot copied to clipboard!');
+                            
+                            let successMsg = '✅ Receipt copied to clipboard!';
+                            if (limitStatus.override) {
+                                successMsg += '\n\n🔐 Admin override active';
+                            } else {
+                                const newStatus = isRateLimited();
+                                successMsg += newStatus.remaining > 0 
+                                    ? `\n\n${newStatus.remaining} uses remaining today.`
+                                    : '\n\n⚠️ Daily limit reached. Resets in 24 hours.';
+                            }
+                            alert(successMsg);
                         } else {
-                            // Fallback: Create a download link
-                            const url = URL.createObjectURL(blob);
-                            const a = document.createElement('a');
-                            a.href = url;
-                            a.download = 'gpay-receipt.png';
-                            document.body.appendChild(a);
-                            a.click();
-                            document.body.removeChild(a);
-                            URL.revokeObjectURL(url);
-                            alert('Receipt screenshot downloaded! (Clipboard not supported)');
+                            alert('❌ Error: Clipboard not supported in this browser.\n\nPlease try again or use a modern browser like Chrome, Firefox, or Safari.');
                         }
                     } catch (clipboardError) {
                         console.error('Clipboard error:', clipboardError);
-                        // Fallback: Create a download link
-                        const url = URL.createObjectURL(blob);
-                        const a = document.createElement('a');
-                        a.href = url;
-                        a.download = 'gpay-receipt.png';
-                        document.body.appendChild(a);
-                        a.click();
-                        document.body.removeChild(a);
-                        URL.revokeObjectURL(url);
-                        alert('Could not copy to clipboard. Receipt downloaded instead.');
+                        alert('❌ Error: Could not copy to clipboard.\n\nPlease try again. If the problem persists, try refreshing the page.');
                     }
                 }, 'image/png');
 
@@ -237,8 +279,15 @@
                 console.error('Screenshot error:', error);
                 alert('Failed to capture screenshot: ' + error.message);
             } finally {
-                // Reset button state
-                const button = event.target;
+                // Reset button back to "Capture" after screenshot is complete
+                const button = document.querySelector('.pay-again-btn');
+                if (button) {
+                    button.textContent = 'Capture';
+                    button.disabled = false;
+                }
+                
+                // Reset button state and update with remaining uses
+                updatePayAgainButton();
             }
         }
 
@@ -275,6 +324,37 @@
                 transactionDateElem.textContent = formatDate(now);
             }
         };
+
+        // Function to sync recipient name to transaction details
+        function syncRecipientName() {
+            const recipientName = document.getElementById('recipientName').textContent;
+            const toRecipient = document.getElementById('toRecipient');
+            
+            // Remove "To " prefix if it exists and update toRecipient
+            const name = recipientName.replace(/^To\s+/, '');
+            if (toRecipient) {
+                toRecipient.textContent = name;
+            }
+        }
+
+        // Initialize date/time on page load and set up event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            updateDateTime();
+            
+            // Add event listener for recipientName changes
+            const recipientNameElem = document.getElementById('recipientName');
+            if (recipientNameElem) {
+                // Listen for input events (real-time editing)
+                recipientNameElem.addEventListener('input', syncRecipientName);
+                // Listen for blur events (when user finishes editing)
+                recipientNameElem.addEventListener('blur', syncRecipientName);
+                // Listen for paste events
+                recipientNameElem.addEventListener('paste', function() {
+                    // Use setTimeout to ensure the paste content is processed first
+                    setTimeout(syncRecipientName, 10);
+                });
+            }
+        });
     </script>
 </body>
 </html>
