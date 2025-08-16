@@ -312,6 +312,7 @@ span#amount {
     margin-right: 8px;
     transition: background-color 0.2s ease;
     flex-shrink: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, Arial, sans-serif;
 }
 
 .completed-status span {
